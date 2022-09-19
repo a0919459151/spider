@@ -29,4 +29,5 @@ const main = async (stockCode) => {
     console.log(stockData)
 }
 
+// main(2330)
 export default main
