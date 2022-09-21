@@ -9,24 +9,24 @@ const router = new Router()
 app.use(koaBody())
 
 router.get('/', async ctx => {
-  ctx.body = '首頁 123'
+  ctx.body = 'Hello koa!'
 })
 
 router.get('/stockData/:stockSymbol', async ctx => {
   const { stockSymbol } = ctx.params
   const result = await spider(stockSymbol)
-  ctx.response.body = JSON.stringify(result)
-  // console.log(result)
+  ctx.body = result
 })
 
-// router.post('/stockData:2330', ctx => {
-//   const { tickerSymbolArray } = ctx.request.body
-
-//   let resObj = {}
-//   tickerSymbolArray.forEach(element => {
-//     resObj[element] = main(element)
-//   })
-// })
+router.post('/stockData', async ctx => {
+  const { stockSymbolArray } = ctx.request.body
+  const temp = []
+  stockSymbolArray.forEach(element => {
+    temp.push(spider(element))
+  })
+  const resObj = await Promise.all(temp)
+  ctx.response.body = resObj
+})
 
 app.use(router.routes())
 
