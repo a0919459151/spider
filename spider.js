@@ -1,33 +1,39 @@
 import got from 'got'
-import cheerio from 'cheerio'
+import { load } from 'cheerio'
+import moment from 'moment-timezone'
 
-const replaceTextToEmpty = (string) => {
-  return string.toString().replace(/[\u4e00-\u9fa5]/g, '')
-}
-
-const spider = async (stockSymbol) => {
+const spiderYahooFinance = async (stockSymbol) => {
   const url = `https://tw.stock.yahoo.com/quote/${stockSymbol}`
 
   const page = await got.get(url).text()
-  const $ = cheerio.load(page)
+  const $ = load(page)
   const stockName = $('h1[class="C($c-link-text) Fw(b) Fz(24px) Mend(8px)"]').text()
-  const table1 = $('li[class="price-detail-item H(32px) Mx(16px) D(f) Jc(sb) Ai(c) Bxz(bb) Px(0px) Py(4px) Bdbs(s) Bdbc($bd-primary-divider) Bdbw(1px)"]')
+  const table1 = $('.price-detail-item')
   const table2 = $('div[class="D(f) Ai(c) H(28px)"]')
+
+  const changeEl = table1.eq(8).children(':last-child')
+  let change = changeEl.text()
+  let changePersentage = table1.eq(7).children(':last-child').text()
+  if (changeEl.hasClass('C($c-trend-down)')) {
+    change = '-' + change
+    changePersentage = '-' + changePersentage
+  }
 
   const stockData = {
     stockCode: stockSymbol,
     stockName,
     info: {
-      lastPrice: replaceTextToEmpty(table1.eq(0).text()), // 股價
-      chang: replaceTextToEmpty(table1.eq(8).text()), // 漲跌
-      changPersentage: replaceTextToEmpty(table1.eq(7).text()), // 漲跌幅（％）
-      open: replaceTextToEmpty(table1.eq(1).text()), // 開盤
-      previousClose: replaceTextToEmpty(table1.eq(6).text()), // 昨收
-      highest: replaceTextToEmpty(table1.eq(2).text()), // 最高
-      lowest: replaceTextToEmpty(table1.eq(3).text()), // 最低
-      volume: replaceTextToEmpty(table1.eq(9).text()), // 成交量（張）
+      lastPrice: table1.eq(0).children(':last-child').text(), // 股價
+      change, // 漲跌
+      changePersentage, // 漲跌幅（％）
+      open: table1.eq(1).children(':last-child').text(), // 開盤
+      previousClose: table1.eq(6).children(':last-child').text(), // 昨收
+      highest: table1.eq(2).children(':last-child').text(), // 最高
+      lowest: table1.eq(3).children(':last-child').text(), // 最低
+      volume: table1.eq(9).children(':last-child').text(), // 成交量（張）
       ask: table2.eq(0).text(), // 委買價
-      bid: table2.eq(5).text() // 委賣價
+      bid: table2.eq(5).text(), // 委賣價
+      time: moment.tz('Asia/Taipei').format('mm:ss')
     }
   }
 
@@ -35,5 +41,5 @@ const spider = async (stockSymbol) => {
   return stockData
 }
 
-// spider(2330)
-export { spider }
+// spiderYahooFinance('2330')
+export { spiderYahooFinance }
