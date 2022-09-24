@@ -32,6 +32,10 @@ router.post('/stockData', async ctx => {
   ctx.response.body = resObj
 })
 
+router.get('/stockPicking/:cellPhone', async ctx => {
+  
+})
+
 app.use(router.routes())
 
 app.listen(3000, () => {
