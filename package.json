@@ -9,9 +9,23 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-	"type": "module",
+  "type": "module",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "got": "^12.5.0"
+    "got": "^12.5.0",
+    "koa": "^2.13.4",
+    "koa-body": "^5.0.0",
+    "koa-router": "^12.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.37",
+    "mongoose": "^6.6.1",
+    "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.1",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-promise": "^6.0.1"
   }
 }

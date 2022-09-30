@@ -1,0 +1,1 @@
+import { stockPickingModle } from '../db'
