@@ -17,4 +17,4 @@ const schema = new Schema({
   }
 })
 
-export { schema }
+export default schema

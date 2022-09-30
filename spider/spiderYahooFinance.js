@@ -2,7 +2,7 @@ import got from 'got'
 import { load } from 'cheerio'
 import moment from 'moment-timezone'
 
-const spiderYahooFinance = async (stockSymbol) => {
+export const spiderYahooFinance = async (stockSymbol) => {
   const url = `https://tw.stock.yahoo.com/quote/${stockSymbol}`
 
   const page = await got.get(url).text()
@@ -33,7 +33,7 @@ const spiderYahooFinance = async (stockSymbol) => {
       volume: table1.eq(9).children(':last-child').text(), // 成交量（張）
       ask: table2.eq(0).text(), // 委買價
       bid: table2.eq(5).text(), // 委賣價
-      time: moment.tz('Asia/Taipei').format('hh:mm')
+      time: moment.tz('Asia/Taipei').format('HH:mm')
     }
   }
 
@@ -42,4 +42,3 @@ const spiderYahooFinance = async (stockSymbol) => {
 }
 
 // spiderYahooFinance('2330')
-export { spiderYahooFinance }

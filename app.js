@@ -1,7 +1,9 @@
 import Koa from 'koa'
 import Router from 'koa-router'
 import koaBody from 'koa-body'
-import { spiderYahooFinance } from './spider.js'
+import { spiderYahooFinance } from './spider/spiderYahooFinance.js'
+import { getOneByStockName } from './stockNameAndStockSymbol/getOneByStockName.js'
+import { getOneByStockSymbol } from './stockNameAndStockSymbol/getOneByStockSymbol.js'
 
 const app = new Koa()
 const router = new Router()
@@ -29,11 +31,23 @@ router.post('/stockData', async ctx => {
     temp.push(spiderYahooFinance(element))
   })
   const resObj = await Promise.all(temp)
-  ctx.response.body = resObj
+  ctx.body = resObj
 })
 
-router.get('/stockPicking/:cellPhone', async ctx => {
+// router.get('/stockPicking/:cellPhone', async ctx => {
   
+// })
+
+router.get('/getOneBystockName/:stockName', async ctx => {
+  const { stockName } = ctx.params
+  const resObj = await getOneByStockName(stockName)
+  ctx.body = resObj
+})
+
+router.get('/getOneBystockSymbol/:stockSymbol', async ctx => {
+  const { stockSymbol } = ctx.params
+  const resObj = await getOneByStockSymbol(stockSymbol)
+  ctx.body = resObj
 })
 
 app.use(router.routes())
